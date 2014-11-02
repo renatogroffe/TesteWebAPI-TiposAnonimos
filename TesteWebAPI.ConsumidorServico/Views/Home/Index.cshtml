@@ -1,0 +1,60 @@
+﻿<div class="jumbotron">
+    <h1>ASP.NET Web API - Retornando mensagens de erro customizadas</h1>
+    <p><a href="http://www.asp.net/web-api"
+          class="btn btn-primary btn-lg">Saiba mais &raquo;</a></p>
+</div>
+
+<div style="padding: 20px;">
+    <p class="lead">
+        Digite a temperatura em graus Celsius a ser convertida:
+        <input id="temperatura" class="form-control text-right" />
+    </p>
+    <a class="btn btn-primary btn-lg"
+       onclick="converterTemperatura();">Converter &raquo;</a>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+    function converterTemperatura() {
+        var temperatura = $("#temperatura").val().replace(",", ".");
+        if (temperatura == "") {
+            alert("Informe um valor de temperatura para conversão!");
+            return;
+        }
+
+        var urlConversao = "@ViewBag.UrlServicoConversaoTemperatura" +
+            "?grausCelsius=" + temperatura;
+
+        $.ajax({
+            type: 'GET',
+            url: urlConversao,
+            dataType: 'json',
+            cache: false,
+            async: false,
+            success: function (data) {
+                alert("Temperatura por escala (em graus)\n\n" +
+                    "Celsius: " + data.Celsius + "\n" +
+                    "Fahrenheit: " + data.Fahrenheit + "\n" +
+                    "Kelvin: " + data.Kelvin);
+            },
+            error: function (xhr, status, error) {
+                alert(error);
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        $("#temperatura").autoNumeric({
+            aSep: '',
+            aDec: ',',
+            mDec: '2',
+            vMin: '-999999999.99',
+            vMax: '999999999.99'
+        });
+    });
+
+    </script>
+}
